@@ -438,14 +438,20 @@ void displayBombs(int x, int y) {
 // calcule les blocs qui doivent être découverts
 // = les blocs vides autour si (x, y) est vide
 //
-void decouvre(int x, int y) {
+void decouvre(int x, int y, int origineX, int origineY, int rayonMax) {
 
   // Vérifier que la case est dans la grille
   if (x < 0 || x >= lignes || y < 0 || y >= colonnes) {
     return;
   }
 
-  // Si déjà découverte ou drapeau, on ne fait rien
+  // Vérifier la distance au point d'origine
+  float d = dist(x, y, origineX, origineY);
+  if (d > rayonMax) {
+    return;
+  }
+
+  // Si déjà découverte ou drapeau
   if (paves[x][y] == EMPTY || paves[x][y] == FLAG) {
     return;
   }
@@ -453,16 +459,16 @@ void decouvre(int x, int y) {
   // Découvrir la case
   paves[x][y] = EMPTY;
 
-  // Si la case a un numéro, on s'arrête
+  // Si la case contient un numéro, on s'arrête
   if (nb_bombes[x][y] != 0) {
     return;
   }
 
-  // Sinon on découvre les 8 voisins
+  // Explorer les voisins
   for (int i = x - 1; i <= x + 1; i++) {
     for (int j = y - 1; j <= y + 1; j++) {
       if (!(i == x && j == y)) {
-        decouvre(i, j);
+        decouvre(i, j, origineX, origineY, rayonMax);
       }
     }
   }
@@ -524,7 +530,7 @@ void mouseClicked() {
         etat=OVER;
         debut=false;
       }else{
-      decouvre(nligne, ncolonne);
+        decouvre(nligne, ncolonne, nligne, ncolonne, 10);
       }
     }
   }
@@ -548,4 +554,4 @@ void mouseClicked() {
     }
   }   
 }
-} //<>//
+}

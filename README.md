@@ -1,2 +1,2 @@
-# D-mineur-Minesweeper
+# Demineur-Minesweeper
 Jeu du Démineur/Minesweeper en Processing
